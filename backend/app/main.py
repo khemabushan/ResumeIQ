@@ -44,7 +44,11 @@ app = FastAPI(
 # ─── CORS ─────────────────────────────────────────────────────────────────────
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://resumeiq-frontend-rjvj.onrender.com",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -52,7 +56,6 @@ app.add_middleware(
 
 # ─── Routers ─────────────────────────────────────────────────────────────────
 app.include_router(analysis.router)
-
 
 # ─── Core endpoints ───────────────────────────────────────────────────────────
 @app.get(
@@ -65,23 +68,20 @@ async def health() -> HealthResponse:
     """Returns 200 OK when the service is up."""
     return HealthResponse(status="ok", version=settings.app_version)
 
-
 # ─── Global exception handler ─────────────────────────────────────────────────
 @app.exception_handler(Exception)
-async def unhandled_exception_handler(request, exc: Exception):  # noqa: ANN001
+async def unhandled_exception_handler(request, exc: Exception):
     logger.exception("Unhandled error on %s %s", request.method, request.url)
     return JSONResponse(
         status_code=500,
         content={"detail": "An unexpected error occurred. Please try again."},
     )
 
-
 # ─── Startup log ─────────────────────────────────────────────────────────────
 @app.on_event("startup")
 async def on_startup() -> None:
     logger.info(
-        "%s v%s started. CORS origins: %s",
+        "%s v%s started. CORS origins configured successfully",
         settings.app_title,
         settings.app_version,
-        settings.cors_origins,
     )
