@@ -57,6 +57,14 @@ npm run dev
 2. Analyze the resume.
 3. View ATS score, missing skills, and recommendations.
 
+## Live Demo
+
+Frontend:
+https://resumeiq-frontend-rjvj.onrender.com
+
+Backend API:
+https://resumeiq-api-n8ln.onrender.com/docs
+
 ## Author
 
 Hemabushan K  
